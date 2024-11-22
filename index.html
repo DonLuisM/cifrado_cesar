@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cifrado César</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Cifrado César</h1>
+                <p class="principal_message">
+                    Hola Nayer, te presento el cifrado César, consiste en desplazar cada letra del mensaje un # fijo de posiciones en el alfabeto. <br>
+                    Para descifrar el mensaje debes poner el # de posiciones en negativo para que te muestre el mensaje original, espero te guste!
+                </p>
+        </header>
+
+        <div class="form-container">
+            <label for="mensaje">Mensaje:</label>
+            <textarea id="mensaje" rows="7" placeholder="Escribe el mensaje aquí..."></textarea>
+
+            <label for="desplazamiento">Desplazamiento (número):</label>
+            <input type="number" id="desplazamiento" min="1" max="25" value="3">
+
+            <button id="cifrar-btn">Cifrar Mensaje</button>
+        </div>
+
+        <div class="resultado">
+            <h2>Mensaje Cifrado:</h2>
+            <p id="mensaje-cifrado"></p>
+        </div>
+    </div>
+
+    <script>
+        // Función para cifrar el mensaje usando el cifrado César
+        function cifrarCesar(mensaje, desplazamiento) {
+            let resultado = '';
+            // Recorremos cada carácter del mensaje
+            for (let i = 0; i < mensaje.length; i++) {
+                let char = mensaje[i];
+                // Ciframos solo las letras (mayúsculas y minúsculas)
+                if (/[a-zA-Z]/.test(char)) {
+                    const codigo = char.charCodeAt(0);
+                    const base = char === char.toUpperCase() ? 65 : 97; // Determinar si es mayúscula o minúscula
+                    // Cifra el carácter asegurándose de que el resultado esté dentro del rango de las letras
+                    const nuevoCodigo = ((codigo - base + desplazamiento + 26) % 26) + base; // Ajuste para desplazamientos negativos
+                    resultado += String.fromCharCode(nuevoCodigo);
+                } else {
+                    // Si no es letra, lo dejamos tal cual (espacios, signos de puntuación, etc.)
+                    resultado += char;
+                }
+            }
+            return resultado;
+        }
+
+        // Obtener los elementos de la página
+        const cifrarBtn = document.getElementById('cifrar-btn');
+        const mensajeInput = document.getElementById('mensaje');
+        const desplazamientoInput = document.getElementById('desplazamiento');
+        const mensajeCifrado = document.getElementById('mensaje-cifrado');
+
+        // Agregar el evento para el botón de cifrar
+        cifrarBtn.addEventListener('click', () => {
+            // Obtener el mensaje y el desplazamiento
+            const mensaje = mensajeInput.value;
+            const desplazamiento = parseInt(desplazamientoInput.value);
+
+            // Verificar que el mensaje no esté vacío
+            if (mensaje.trim() !== '') {
+                // Llamar a la función de cifrado
+                const mensajeCifradoTexto = cifrarCesar(mensaje, desplazamiento);
+                // Mostrar el mensaje cifrado en la página
+                mensajeCifrado.textContent = mensajeCifradoTexto;
+            } else {
+                // Si el mensaje está vacío, mostrar un mensaje de advertencia
+                mensajeCifrado.textContent = 'Por favor, ingresa el mensaje.';
+            }
+        });
+    </script>
+</body>
+</html>
